@@ -10,7 +10,7 @@ main.cpp: vec3.h
 $(EXECUTABLE): main.cpp $(BUILD_DIR)
 	g++ main.cpp -o $@
 
-draw: $(RENDERED_DIR)
+draw: $(RENDERED_DIR) $(EXECUTABLE)
 	$(EXECUTABLE) > $(IMAGE)
 
 $(BUILD_DIR):
