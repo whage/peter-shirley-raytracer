@@ -5,7 +5,7 @@ IMAGE = $(RENDERED_DIR)/img.ppm
 
 default: $(EXECUTABLE)
 
-$(EXECUTABLE): main.cpp hitable_list.h sphere.h camera.h metal.h $(BUILD_DIR)
+$(EXECUTABLE): main.cpp hitable_list.h sphere.h camera.h metal.h util.h vec3.h $(BUILD_DIR)
 	g++ main.cpp -o $@ -g
 
 draw: $(RENDERED_DIR) $(EXECUTABLE)

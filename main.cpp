@@ -1,10 +1,13 @@
 #include <iostream>
+#include <stdlib.h>
 #include "sphere.h"
 #include "hitable_list.h"
 #include "float.h"
 #include "camera.h"
 #include "lambertian.h"
 #include "metal.h" 
+#include "dielectric.h" 
+#include "util.h"
 
 float hits_sphere(const vec3& center, float radius, const ray& r) {
     vec3 oc = r.origin() - center;
@@ -33,24 +36,26 @@ vec3 color(const ray& r, hitable *world, int depth) {
     } else {
         vec3 unit_direction = unit_vector(r.direction());
         float t = 0.5*(unit_direction.y() + 1.0);
-        return (1.0-t)*vec3(1.0, 1.0, 1.0) + t*vec3(0.5, 0.7, 0.1);
+        return (1.0-t)*vec3(0.0, 0.0, 1.0) + t*vec3(0.5, 0.7, 0.1);
     }
 }
 
 int main() {
     int nx = 200;
     int ny = 100;
-    int ns = 100;
+    int ns = 40;
 
     std::cout << "P3\n" << nx << " " << ny << "\n255\n";
 
-    hitable *list[4];
-    list[0] = new sphere(vec3(0, 0, -1),    0.5, new lambertian(vec3(0.8, 0.3, 0.3)));
+    camera cam = *(new camera());
+
+    hitable *list[5];
+    list[0] = new sphere(vec3(0, 0, -1),    0.5, new lambertian(vec3(0.2, 0.2, 0.8)));
     list[1] = new sphere(vec3(0,-100.5,-1), 100, new lambertian(vec3(0.8, 0.8, 0.0)));
-    list[2] = new sphere(vec3(-1,0,-1), 0.5, new metal(vec3(0.8, 0.6, 0.2), 0.05));
-    list[3] = new sphere(vec3(1,0,-1), 0.5, new metal(vec3(0.8, 0.8, 0.1), 0.2));
-    hitable *world = new hitable_list(list, 4);
-    camera cam;
+    list[2] = new sphere(vec3(-1,0,-1), 0.5, new metal(vec3(0.5, 0.5, 0.5), 0.05));
+    list[3] = new sphere(vec3(1,0,-1), 0.5, new metal(vec3(0.8, 0.5, 0.3), 0.2));
+    list[4] = new sphere(vec3(0.5,0,0), 0.5, new dielectric(1.5));
+    hitable *world = new hitable_list(list, 5);
 
     for (int j = ny-1; j >= 0; j--) {
         for (int i = 0; i < nx; ++i) {
